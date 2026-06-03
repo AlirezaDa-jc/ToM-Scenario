@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from benchmark.adapter import DummyAdapter
+from benchmark.adapters.gemini_adapter import GeminiAdapter
 from benchmark.loader import DatasetLoader
 from benchmark.metrics import MetricsAggregator
 from benchmark.runner import BenchmarkRunner
@@ -18,8 +18,8 @@ if __name__ == "__main__":
     dataset = DatasetLoader.load(DATASET_PATH)
     print(f"Loaded {len(dataset)} scenarios.")
 
-    # 2. Run benchmark with DummyAdapter (no API needed)
-    adapter = DummyAdapter(fixed_answer="Box_A")
+    # 2. Run benchmark with Gemini Adapter
+    adapter = GeminiAdapter(model="gemini-3-flash-preview")
     runner  = BenchmarkRunner(adapter=adapter, prompt_template="default")
     results = runner.run(dataset)
 
