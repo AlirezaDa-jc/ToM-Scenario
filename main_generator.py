@@ -6,6 +6,7 @@ from pathlib import Path
 from core.executor import ScenarioExecutor
 from core.questions import QuestionGenerator
 from core.scenario import ScenarioConfig, ScenarioGenerator, TemplateType
+from core.validator import DatasetValidator
 
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -33,6 +34,11 @@ def build_output(result, qset) -> dict:
             for i, e in enumerate(scenario.events)
         ],
         "story": qset.story,
+        "belief_state": {
+            "reality": result.world_truth,
+            "first_order": result.first_order_beliefs,
+            "second_order": result.second_order_beliefs,
+        },
         "ground_truth": result.world_truth,
         "first_order_beliefs": result.first_order_beliefs,
         "second_order_beliefs": result.second_order_beliefs,
@@ -69,3 +75,10 @@ if __name__ == "__main__":
 
     total_questions = sum(len(s["questions"]) for s in all_scenarios)
     print(f"Generated {len(all_scenarios)} scenarios, {total_questions} questions → {output_file}")
+
+    # Validate dataset before use
+    report = DatasetValidator.validate(all_scenarios)
+    report.print_report()
+
+    if not report.passed:
+        raise RuntimeError("Dataset validation FAILED. Fix generation errors before proceeding.")
