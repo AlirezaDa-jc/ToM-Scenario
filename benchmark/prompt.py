@@ -9,19 +9,31 @@ from typing import Dict
 
 _TEMPLATES: Dict[str, str] = {
     "default": (
-        "Story: {story}\n"
-        "Question: {question}\n"
-        "Answer with only the location name."
+        "Story:\n{story}\n\n"
+        "Question:\n{question}\n\n"
+        "**STRICT OUTPUT RULES:**\n"
+        "- Answer with exactly one location name.\n"
+        "- Do not explain.\n"
+        "- Do not add punctuation.\n"
+        "- Do not mention any other location.\n\n"
+        "Location:"
     ),
     "minimal": (
         "{story}\n"
         "{question}"
     ),
     "cot": (
-        "Story: {story}\n"
-        "Question: {question}\n"
-        "Think step by step, then answer with only the location name."
-    ),
+        "Story:\n{story}\n\n"
+        "Question:\n{question}\n\n"
+
+        "MAX 64 TOKENS.\n"
+        "OUTPUT FORMAT:\n"
+        "ANSWER: <location>\n"
+        "REASON: <10 words max>\n\n"
+
+        "The ANSWER line is mandatory and must appear first.\n"
+        "One location name only.\n"
+    )
 }
 
 
